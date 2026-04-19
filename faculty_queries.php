@@ -4,7 +4,7 @@ require_role('faculty');
 
 $fid = $_SESSION['user_id'];
 
-/* ✅ MARK ALL QUERIES AS SEEN */
+/* MARK ALL QUERIES AS SEEN */
 $stmt = $conn->prepare("
     UPDATE queries
     SET seen = 1
@@ -31,34 +31,38 @@ $queries = get_faculty_queries($fid);
 
 <div class="container">
 
-    <!-- Back to Dashboard Button -->
-    <a class="btn" href="dashboard.php" style="margin-bottom:15px; display:inline-block;">← Back to Dashboard</a>
+    <!-- Back Button -->
+    <a class="btn" href="dashboard.php" style="margin-bottom:15px; display:inline-block;">
+        ← Back to Dashboard
+    </a>
 
     <h3>Student Queries</h3>
 
     <table class="table">
         <tr>
             <th>Student</th>
-            <th>Subject</th>
             <th>Message</th>
             <th>Reply</th>
         </tr>
 
         <?php foreach($queries as $q): ?>
         <tr>
-            <td><?=$q['student_name']?></td>
-            <td><?=$q['subject']?></td>
-            <td><?=$q['message']?></td>
+            <td><?=htmlspecialchars($q['student_name'])?></td>
+
+            <td><?=htmlspecialchars($q['message'])?></td>
+
             <td>
-                <?php if($q['status']=="open"): ?>
-                <form method="POST">
-                    <input type="hidden" name="query_id" value="<?=$q['id']?>">
-                    <textarea name="reply" required style="width:100%;height:80px;"></textarea>
-                    <br>
-                    <button class="btn">Send Reply</button>
-                </form>
+                <?php if($q['status'] == "open"): ?>
+                    <form method="POST">
+                        <input type="hidden" name="query_id" value="<?=$q['id']?>">
+
+                        <textarea name="reply" required style="width:100%;height:80px;"></textarea>
+                        <br>
+
+                        <button class="btn">Send Reply</button>
+                    </form>
                 <?php else: ?>
-                    <?=$q['reply']?>
+                    <?=htmlspecialchars($q['reply'])?>
                 <?php endif; ?>
             </td>
         </tr>
