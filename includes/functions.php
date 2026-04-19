@@ -127,40 +127,81 @@ function upsert_marks($student_id, $subject_id, $i1, $i2, $i3) {
     return true;
 }
 
-/* Pre-exam checklist: low attendance and incomplete submissions */
 function preexam_flags($student_id) {
     global $conn;
     $student_id = (int)$student_id;
-    // Low attendance
+
+    /* -----------------------------
+       LOW ATTENDANCE
+    ----------------------------- */
     $sql = "
       SELECT s.name,
              COALESCE(total,0) AS total_classes,
              COALESCE(presents,0) AS presents,
-             (CASE WHEN COALESCE(total,0)=0 THEN 0 ELSE ROUND((presents/total)*100,2) END) AS attendance_percent
+             (CASE 
+                WHEN COALESCE(total,0)=0 THEN 0 
+                ELSE ROUND((presents/total)*100,2) 
+              END) AS attendance_percent
       FROM subjects s
       LEFT JOIN (
         SELECT subject_id,
           COUNT(*) AS total,
           SUM(CASE WHEN status='present' THEN 1 ELSE 0 END) AS presents
-        FROM attendance a
-        WHERE a.student_id=$student_id
+        FROM attendance
+        WHERE student_id=$student_id
         GROUP BY subject_id
       ) t ON t.subject_id = s.id
-      ORDER BY s.name";
+    ";
+
     $res = $conn->query($sql);
-    $low = [];
+    $low_attendance = [];
+
     if ($res) {
         while ($r = $res->fetch_assoc()) {
-            if ((float)$r['attendance_percent'] < 75.0) {
-                $low[] = $r;
+            if ((float)$r['attendance_percent'] < 75) {
+                $low_attendance[] = $r;
             }
         }
     }
-    // Incomplete submissions
-    $subRes = $conn->query("SELECT s.name AS subject, sub.assignment_title, sub.due_date FROM submissions sub JOIN subjects s ON sub.subject_id=s.id WHERE sub.student_id=$student_id AND sub.submitted=0");
-    $incomplete = $subRes ? $subRes->fetch_all(MYSQLI_ASSOC) : [];
 
-    return ['low_attendance'=>$low, 'incomplete'=>$incomplete];
+    /* -----------------------------
+       LOW CA MARKS (NEW LOGIC)
+       Avg of internal1,2,3 < 15
+    ----------------------------- */
+    $sql2 = "
+      SELECT s.name,
+             m.internal1, m.internal2, m.internal3
+      FROM subjects s
+      LEFT JOIN marks m 
+        ON m.subject_id = s.id 
+       AND m.student_id = $student_id
+    ";
+
+    $res2 = $conn->query($sql2);
+    $low_marks = [];
+
+    if ($res2) {
+        while ($r = $res2->fetch_assoc()) {
+
+            $vals = array_filter([
+                $r['internal1'],
+                $r['internal2'],
+                $r['internal3']
+            ], fn($v) => $v !== null);
+
+            $avg = count($vals) ? array_sum($vals)/count($vals) : 0;
+
+            if ($avg < 15) {
+                $r['avg'] = round($avg,2);
+                $low_marks[] = $r;
+            }
+        }
+    }
+
+    return [
+        'low_attendance' => $low_attendance,
+        'low_marks' => $low_marks
+    ];
 }
 
 function check_admin() {

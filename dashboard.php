@@ -72,7 +72,7 @@ if ($role === 'student') {
     <h4>Pre-Exam Flags</h4>
     <?php
     $flags = preexam_flags($uid);
-    $flagCount = count($flags['low_attendance']) + count($flags['incomplete']);
+    $flagCount = count($flags['low_attendance']) + count($flags['low_marks']);
     ?>
     <div class="value"><?=$flagCount?></div>
     <a class="btn" href="preexam_checklist.php" style="margin-top:8px;">View</a>
