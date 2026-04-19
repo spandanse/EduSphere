@@ -1,44 +1,44 @@
 # 🎓 EduSphere – Academic Management System
 
-EduSphere is a **web-based academic management system** designed to streamline and automate key college processes such as student attendance tracking, marks management, performance analytics, and faculty-student communication.
+EduSphere is a web-based academic management system designed to streamline and automate college academic processes such as attendance tracking, marks management, performance analytics, and student-faculty communication.
 
-This project is developed as part of a B.Tech CSE final-year academic initiative.
+This project is developed as part of a B.Tech CSE final-year academic project.
 
 ---
 
 ## 🚀 Features
 
 ### 👨‍🎓 Student Module
-- View attendance subject-wise with percentage analysis
-- Track internal assessment marks (CA1, CA2, CA3)
+- View subject-wise attendance with percentage
+- View internal marks (CA1, CA2, CA3)
 - Visual analytics using charts (Chart.js)
 - Smart attendance prediction system
-- Pre-exam checklist (low attendance + incomplete submissions)
+- Pre-exam checklist (low attendance & pending work)
 - Raise and track queries with faculty
 
 ### 👨‍🏫 Faculty Module
-- Mark and manage student attendance
-- Enter and update internal marks
-- View subject-wise student performance
-- Access student attendance analytics
+- Mark and manage attendance
+- Enter and update marks
+- View student performance analytics
+- Access subject-wise attendance overview
 - Respond to student queries
-- View overall class performance dashboard
+- View class performance dashboard
 
 ### 🛠️ Admin Module
 - Manage users (students & faculty)
 - Manage subjects
-- View system statistics (users, subjects)
+- View system statistics
 
 ---
 
 ## 🧠 Key Functionalities
 
-- Role-based authentication (Student / Faculty / Admin)
+- Role-based login system (Student / Faculty / Admin)
 - Attendance percentage calculation using SQL aggregation
-- Marks analysis with dynamic averaging
-- Smart recommendation engine for attendance improvement
+- Marks analytics with dynamic averaging
+- Smart recommendation system for attendance improvement
 - Modal-based detailed attendance view
-- Real-time dashboard analytics
+- Interactive dashboard charts using Chart.js
 
 ---
 
@@ -52,7 +52,6 @@ This project is developed as part of a B.Tech CSE final-year academic initiative
 
 **Backend:**
 - PHP (Core PHP)
-- MySQL
 
 **Database:**
 - MySQL (XAMPP / phpMyAdmin)
@@ -61,48 +60,61 @@ This project is developed as part of a B.Tech CSE final-year academic initiative
 
 ## 📂 Project Structure
 
+```
 
 EduSphere/
-│
-├── assets/ # CSS, JS, images
-├── includes/ # Core PHP functions & DB connection
-├── dashboard.php # Main dashboard (student/faculty/admin)
-├── login.php # Login system
+├── assets/
+├── includes/
+├── dashboard.php
+├── login.php
 ├── logout.php
-├── edusphere.sql # Database file
+├── edusphere.sql
 ├── get_student_full_attendance.php
-└── other PHP modules
+└── other PHP files
 
+```
 
 ---
 
 ## ⚙️ Installation & Setup
 
-### 🔹 Step 1: Clone Repository
-```bash
-git clone https://github.com/spandanse/EduSphere.git
-🔹 Step 2: Move to XAMPP directory
+### Step 1: Clone Repository
+```
 
-Place the project inside:
+git clone [https://github.com/spandanse/EduSphere.git](https://github.com/spandanse/EduSphere.git)
+
+```
+
+### Step 2: Move to XAMPP folder
+Place project inside:
+```
 
 C:\xampp\htdocs\
-🔹 Step 3: Database Setup
-Open phpMyAdmin
 
-Create database:
+```
+
+### Step 3: Create Database
+- Open phpMyAdmin
+- Create database:
+```
 
 edusphere_db
 
-Import:
+````
+- Import `edusphere.sql`
 
-edusphere.sql
-🔹 Step 4: Configure DB Connection
-
-Update includes/db.php if needed:
-
+### Step 4: Configure Database
+Update `includes/db.php` if required:
+```php
 $conn = new mysqli("localhost", "root", "", "edusphere_db");
-🔹 Step 5: Run Project
+````
 
-Open in browser:
+### Step 5: Run Project
 
+Open browser:
+
+```
 http://localhost/EduSphere/
+```
+
+---
