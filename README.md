@@ -1,42 +1,44 @@
 # 🎓 EduSphere
 
-EduSphere is a **Smart Academic Management System** designed for colleges to efficiently manage **students, faculty, attendance, marks, and academic analytics** in one unified platform.
+EduSphere is a **Smart Academic Management System** built for colleges to manage students, faculty, attendance, marks, and academic analytics in a centralized platform.
 
-It provides real-time insights like attendance tracking, CA performance, pre-exam risk detection, and faculty-student communication.
+It focuses on **real-time performance tracking, smart attendance analysis, and exam readiness evaluation**.
 
 ---
 
 ## 🚀 Features
 
 ### 👨‍🎓 Student Module
-- View attendance subject-wise with percentage analytics
-- Continuous Assessment (CA) performance tracking (CA1, CA2, CA3)
-- Smart attendance prediction (how many classes needed to maintain 75%)
-- Pre-exam checklist (low attendance + low marks detection)
-- Submit queries to faculty
-- Interactive charts (Chart.js visualization)
+- Subject-wise attendance tracking with percentage analytics
+- Continuous Assessment (CA1, CA2, CA3) performance visualization
+- Smart attendance prediction (classes needed to maintain 75%)
+- Pre-exam checklist (risk detection based on attendance & marks)
+- Interactive dashboards with charts (Chart.js)
+- Query submission system to faculty
 
 ### 👨‍🏫 Faculty Module
-- Manage attendance records
+- Manage student attendance records
 - Manage internal marks (CA1, CA2, CA3)
-- View subject-wise student performance
-- View full student attendance records
+- View subject-wise student performance analytics
+- Access full student attendance history
 - Respond to student queries
 - Smart student performance overview dashboard
 
 ### 🔐 Admin Module
 - Manage users (students & faculty)
-- Manage subjects
-- System overview dashboard
+- Manage academic subjects
+- System-level overview dashboard
 
 ---
 
 ## 🧠 Smart Features
-- 📊 Attendance analytics with visual charts
-- 📉 Automated low attendance detection
-- 🎯 Exam readiness checklist (risk-based analysis)
-- 📈 Performance visualization using Chart.js
-- ⚡ Real-time dashboard updates
+
+- 📊 Real-time attendance analytics
+- 📉 Automatic low attendance detection (<75%)
+- 🎯 Pre-exam risk analysis system
+- 📈 CA performance visualization
+- ⚡ Predictive attendance insights
+- 📌 Role-based dashboards (Student / Faculty / Admin)
 
 ---
 
@@ -59,13 +61,12 @@ It provides real-time insights like attendance tracking, CA performance, pre-exa
 
 ## 🗄️ Database Design
 
-Main tables:
+Core tables used:
 - users
 - subjects
 - attendance
 - marks
 - queries
-- submissions (planned/optional)
 
 ---
 
@@ -76,8 +77,8 @@ Main tables:
 EduSphere/
 │
 ├── assets/              # CSS, JS, images
-├── includes/            # DB connection & functions
-├── dashboard.php        # Main dashboard
+├── includes/           # DB connection & helper functions
+├── dashboard.php       # Main dashboard
 ├── login.php
 ├── logout.php
 ├── attendance.php
@@ -95,21 +96,21 @@ EduSphere/
 ## 📊 Key Functionalities
 
 ### 📌 Attendance Tracking
-- Subject-wise attendance calculation
-- Percentage computation using SQL aggregation
+- Subject-wise attendance calculation using SQL aggregation
+- Percentage computation and visualization
 
 ### 📌 Marks System
 - Internal assessment tracking (CA1, CA2, CA3)
-- Average performance calculation
+- Average performance calculation per subject
 
-### 📌 Pre-Exam Intelligence
+### 📌 Pre-Exam Intelligence System
 - Flags students with:
   - Low attendance (<75%)
   - Low CA performance
-- Helps students identify risk areas early
+- Helps students identify academic risks early
 
 ### 📌 Smart Dashboard
-- Graphical visualization of academic data
-- Role-based dashboards (Student / Faculty / Admin)
+- Graphical representation of academic performance
+- Role-based dashboards with dynamic data visualization
 
 ---
