@@ -44,18 +44,6 @@ CREATE TABLE marks (
   FOREIGN KEY (subject_id) REFERENCES subjects(id) ON DELETE CASCADE
 );
 
--- SUBMISSIONS (to simulate incomplete submissions)
-CREATE TABLE submissions (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  student_id INT NOT NULL,
-  subject_id INT NOT NULL,
-  assignment_title VARCHAR(255),
-  submitted TINYINT(1) DEFAULT 0, -- 0 = not submitted, 1 = submitted
-  due_date DATE,
-  FOREIGN KEY (student_id) REFERENCES users(id) ON DELETE CASCADE,
-  FOREIGN KEY (subject_id) REFERENCES subjects(id) ON DELETE CASCADE
-);
-
 -- FEEDBACK / QUERY MODULE
 CREATE TABLE queries (
   id INT AUTO_INCREMENT PRIMARY KEY,
@@ -105,9 +93,4 @@ INSERT INTO marks (student_id, subject_id, internal1, internal2, internal3) VALU
 (1,3,88,85,90),
 (2,1,60,65,63);
 
--- Seed submissions: student 1 missed an assignment in Physics, etc.
-INSERT INTO submissions (student_id, subject_id, assignment_title, submitted, due_date) VALUES
-(1,2,'Quiz 1',0,'2025-11-20'),
-(1,3,'Lab 1',1,'2025-11-18'),
-(2,1,'Assignment 1',1,'2025-11-18');
 
