@@ -423,3 +423,194 @@ function get_faculty_subject_attendance($faculty_id, $subject_id) {
     $result = $stmt->get_result();
     return $result->fetch_all(MYSQLI_ASSOC);
 }
+
+/* Create Notice */
+function create_notice($title, $message, $subject_id, $student_ids) {
+
+    global $conn;
+
+    $uploaded_by = $_SESSION['user_id'];
+    $role = $_SESSION['role'];
+
+    $stmt = $conn->prepare("
+        INSERT INTO notices
+        (title, message, subject_id, uploaded_by, uploader_role)
+        VALUES (?, ?, ?, ?, ?)
+    ");
+
+    $stmt->bind_param(
+        "ssiis",
+        $title,
+        $message,
+        $subject_id,
+        $uploaded_by,
+        $role
+    );
+
+    $stmt->execute();
+
+    $notice_id = $conn->insert_id;
+
+    foreach($student_ids as $sid){
+
+        $sid = (int)$sid;
+
+        $stmt2 = $conn->prepare("
+            INSERT INTO notice_recipients
+            (notice_id, student_id)
+            VALUES (?, ?)
+        ");
+
+        $stmt2->bind_param("ii", $notice_id, $sid);
+        $stmt2->execute();
+    }
+
+    return true;
+}
+
+/* Get notices for student */
+function get_student_notices($student_id){
+
+    global $conn;
+
+    $stmt = $conn->prepare("
+        SELECT n.*, nr.is_read,
+               u.name AS uploader_name,
+               s.name AS subject_name
+
+        FROM notice_recipients nr
+
+        JOIN notices n
+        ON nr.notice_id = n.id
+
+        LEFT JOIN users u
+        ON n.uploaded_by = u.id
+
+        LEFT JOIN subjects s
+        ON n.subject_id = s.id
+
+        WHERE nr.student_id=?
+
+        ORDER BY n.created_at DESC
+    ");
+
+    $stmt->bind_param("i", $student_id);
+    $stmt->execute();
+
+    return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+}
+
+/* Mark notice as read */
+function mark_notice_read($notice_id, $student_id){
+
+    global $conn;
+
+    $stmt = $conn->prepare("
+        UPDATE notice_recipients
+        SET is_read=1,
+            read_at=NOW()
+        WHERE notice_id=?
+        AND student_id=?
+    ");
+
+    $stmt->bind_param("ii", $notice_id, $student_id);
+    $stmt->execute();
+}
+
+/* =========================
+   STUDY REPOSITORY
+========================= */
+
+function upload_study_material(
+    $title,
+    $description,
+    $file_name,
+    $subject_id,
+    $faculty_id
+){
+
+    global $conn;
+
+    $stmt = $conn->prepare("
+        INSERT INTO study_materials
+        (
+            title,
+            description,
+            file_name,
+            subject_id,
+            faculty_id
+        )
+        VALUES (?, ?, ?, ?, ?)
+    ");
+
+    $stmt->bind_param(
+        "sssii",
+        $title,
+        $description,
+        $file_name,
+        $subject_id,
+        $faculty_id
+    );
+
+    return $stmt->execute();
+}
+
+function get_study_materials(){
+
+    global $conn;
+
+    $q = $conn->query("
+        SELECT
+            sm.*,
+            s.name AS subject_name,
+            u.name AS faculty_name
+
+        FROM study_materials sm
+
+        JOIN subjects s
+        ON sm.subject_id = s.id
+
+        JOIN users u
+        ON sm.uploaded_by = u.id
+
+        ORDER BY sm.created_at DESC
+    ");
+
+    return $q->fetch_all(MYSQLI_ASSOC);
+}
+
+function get_materials_by_faculty($faculty_id){
+
+    global $conn;
+
+    $stmt = $conn->prepare("
+        SELECT
+            sm.*,
+            s.name AS subject_name
+        FROM study_materials sm
+        JOIN subjects s
+            ON sm.subject_id = s.id
+        WHERE sm.faculty_id = ?
+        ORDER BY sm.created_at DESC
+    ");
+
+    $stmt->bind_param("i", $faculty_id);
+
+    $stmt->execute();
+
+    return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+}
+
+function delete_material($id){
+
+    global $conn;
+
+    $stmt = $conn->prepare("
+        DELETE FROM study_materials
+        WHERE id=?
+    ");
+
+    $stmt->bind_param("i", $id);
+
+    return $stmt->execute();
+}

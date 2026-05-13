@@ -60,6 +60,32 @@ CREATE TABLE queries (
   FOREIGN KEY (subject_id) REFERENCES subjects(id) ON DELETE CASCADE
 );
 
+-- NOTICES TABLE
+CREATE TABLE notices (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    message TEXT NOT NULL,
+    subject_id INT NULL,
+    uploaded_by INT NOT NULL,
+    uploader_role ENUM('admin','faculty') NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (uploaded_by) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (subject_id) REFERENCES subjects(id) ON DELETE SET NULL
+);
+
+-- NOTICE RECIPIENTS
+CREATE TABLE notice_recipients (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    notice_id INT NOT NULL,
+    student_id INT NOT NULL,
+    is_read TINYINT(1) DEFAULT 0,
+    read_at DATETIME NULL,
+
+    FOREIGN KEY (notice_id) REFERENCES notices(id) ON DELETE CASCADE,
+    FOREIGN KEY (student_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
 -- Seed users (passwords as plain text initially: will be upgraded on first login)
 INSERT INTO users (name, email, password, role) VALUES
 ('Spandan Sen','student1@example.com','password123','student'),

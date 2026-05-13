@@ -59,13 +59,42 @@ if ($role === 'student') {
 
   <!-- Overall Attendance -->
   <div class="stats-card">
-    <h4>Overall Attendance (avg)</h4>
+    <h4>Overall Attendance (average)</h4>
     <?php
     $avg = 0;
     if (count($attendanceData)) $avg = round(array_sum($attendanceData)/count($attendanceData),2);
     ?>
     <div class="value"><?=$avg?>%</div>
   </div>
+
+  <!-- Notice Board -->
+<div class="stats-card">
+  <h4>Notice Board</h4>
+
+  <?php
+  $notices = get_student_notices($uid);
+
+  $newNoticeCount = 0;
+
+  foreach($notices as $n){
+      if(!$n['is_read']){
+          $newNoticeCount++;
+      }
+  }
+  ?>
+
+  <div class="value">
+    <?=$newNoticeCount?>
+  </div>
+
+  <div style="margin-top:5px;font-size:14px;">
+    New Notices
+  </div>
+
+  <a class="btn" href="student_notices.php" style="margin-top:8px;">
+    View
+  </a>
+</div>
 
   <!-- Pre-Exam Flags -->
   <div class="stats-card">
@@ -77,6 +106,24 @@ if ($role === 'student') {
     <div class="value"><?=$flagCount?></div>
     <a class="btn" href="preexam_checklist.php" style="margin-top:8px;">View</a>
   </div>
+
+      <div class="stats-card">
+
+  <h4>Study Repository</h4>
+
+  <div class="value">
+    📚
+  </div>
+
+  <a
+  class="btn"
+  href="study_repository.php"
+  style="margin-top:8px;"
+  >
+    Open
+  </a>
+
+</div>
 
 </div>
 
@@ -93,7 +140,7 @@ if ($role === 'student') {
 
       <div class="chart-grid">
 
-        <div class="card">
+   <div class="card">     
   <h4>Attendance (%) by subject</h4>
   <canvas id="attendanceChart"></canvas>
 
@@ -151,7 +198,7 @@ if ($role === 'student') {
       <?php endforeach; ?>
     </table>
   </div>
-
+</div>
 </div>
 
 <div class="card">
@@ -203,6 +250,8 @@ $unreadCount = get_unread_query_count($_SESSION['user_id']);
         <a class="btn" href="attendance.php">Manage Attendance</a>
         <a class="btn" href="marks.php" style="margin-left:8px">Manage Marks</a>
         <a class="btn" href="faculty_queries.php" style="margin-left:8px">Student Queries</a>
+        <a class="btn" href="create_notice.php" style="margin-left:8px">Notice Board</a>
+        <a class="btn" href="upload_material.php" style="margin-left:8px">Study Repository</a>
       </div>
 
       <div class="card">
@@ -303,7 +352,9 @@ foreach($marks as $m):
       <div class="card">
       <h3>Admin Dashboard</h3>
       <p>Welcome, Admin. You can manage users for EduSphere Phase 1.</p>
-
+      <a href="create_notice.php" class="btn">
+Manage Notices
+</a>
       <div class="stats-box">
         <div class="stats-card">
           <h4>Total Users</h4>
@@ -575,5 +626,7 @@ function closeFacultyModal() {
     <button onclick="closeFacultyModal()" class="btn">Close</button>
   </div>
 </div>
+
+
 </body>
 </html>
