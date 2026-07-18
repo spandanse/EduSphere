@@ -12,19 +12,67 @@ $labels = [];
 if ($role === 'student') {
     $att = attendance_stats_for_student($uid); // array of subjects with total/presents
     foreach ($att as $r) {
-        $labels[] = $r['name'];
-        $p = $r['total_classes'] ? round(($r['presents']/$r['total_classes'])*100,2) : 0;
-        $attendanceData[] = $p;
+
+    $subjectCode = '';
+
+    switch(trim($r['name'])) {
+        case 'Machine Learning':
+            $subjectCode = 'PEC-CS701E';
+            break;
+
+        case 'Cyber Security':
+            $subjectCode = 'PEC-CS702E';
+            break;
+
+        case 'Operations Research':
+            $subjectCode = 'OECCS701A';
+            break;
+
+        case 'Project Management and Entrepreneurship':
+            $subjectCode = 'HSMC701';
+            break;
     }
-    $marks = marks_summary_for_student($uid);
-    foreach ($marks as $m) {
-        $marksData[] = [
-            'subject' => $m['name'],
-              'i1' => $m['internal1'] !== null ? (int)$m['internal1'] : null,
-              'i2' => $m['internal2'] !== null ? (int)$m['internal2'] : null,
-              'i3' => $m['internal3'] !== null ? (int)$m['internal3'] : null,
-        ];
+
+    $labels[] = $r['name'];
+
+    $p = $r['total_classes']
+        ? round(($r['presents'] / $r['total_classes']) * 100, 2)
+        : 0;
+
+    $attendanceData[] = $p;
+}
+
+$marks = marks_summary_for_student($uid);
+
+foreach ($marks as $m) {
+
+    $subjectCode = '';
+
+    switch(trim($m['name'])) {
+        case 'Machine Learning':
+            $subjectCode = 'PEC-CS701E';
+            break;
+
+        case 'Cyber Security':
+            $subjectCode = 'PEC-CS702E';
+            break;
+
+        case 'Operations Research':
+            $subjectCode = 'OECCS701A';
+            break;
+
+        case 'Project Management and Entrepreneurship':
+            $subjectCode = 'HSMC701';
+            break;
     }
+
+    $marksData[] = [
+        'subject' => $m['name'],
+        'i1' => $m['internal1'] !== null ? (int)$m['internal1'] : null,
+        'i2' => $m['internal2'] !== null ? (int)$m['internal2'] : null,
+        'i3' => $m['internal3'] !== null ? (int)$m['internal3'] : null,
+    ];
+}
 }
 ?>
 <!doctype html>
@@ -58,8 +106,8 @@ if ($role === 'student') {
 <div class="top-cards">
 
   <!-- Overall Attendance -->
-  <div class="stats-card">
-    <h4>Overall Attendance (average)</h4>
+  <div class="stats-card" id="attendanceCard" style="cursor:pointer;">
+  <h4>Overall Attendance (average)</h4>
     <?php
     $avg = 0;
     if (count($attendanceData)) $avg = round(array_sum($attendanceData)/count($attendanceData),2);
@@ -98,7 +146,7 @@ if ($role === 'student') {
 
   <!-- Pre-Exam Flags -->
   <div class="stats-card">
-    <h4>Pre-Exam Flags</h4>
+    <h4>Pre-Exam Checklist</h4>
     <?php
     $flags = preexam_flags($uid);
     $flagCount = count($flags['low_attendance']) + count($flags['low_marks']);
@@ -140,7 +188,7 @@ if ($role === 'student') {
 
       <div class="chart-grid">
 
-   <div class="card">     
+   <div class="card" id="attendanceSection">
   <h4>Attendance (%) by subject</h4>
   <canvas id="attendanceChart"></canvas>
 
@@ -162,7 +210,27 @@ if ($role === 'student') {
       foreach($predictions as $p): 
       ?>
       <tr>
-  <td><?=htmlspecialchars($p['subject'])?></td>
+  <td>
+<?=
+htmlspecialchars(
+    $p['subject'] == 'Machine Learning'
+        ? 'Machine Learning (PEC-CS701E)'
+        : (
+            $p['subject'] == 'Cyber Security'
+            ? 'Cyber Security (PEC-CS702E)'
+            : (
+                $p['subject'] == 'Operations Research'
+                ? 'Operations Research (OECCS701A)'
+                : (
+                    $p['subject'] == 'Project Management and Entrepreneurship'
+                    ? 'Project Management and Entrepreneurship (HSMC701)'
+                    : $p['subject']
+                )
+            )
+        )
+)
+?>
+</td>
 
   <td><?=$p['attended']?> / <?=$p['total']?></td>
 
@@ -179,11 +247,11 @@ if ($role === 'student') {
   <td>
     <?php if($p['current_percent'] < 75): ?>
       <span style="color:red;font-weight:bold;">
-        Attend next <?=$p['required_classes']?> classes
+        Must attend next <?=$p['required_classes']?> classes for 75%
       </span>
     <?php else: ?>
       <span style="color:green;font-weight:bold;">
-        On track! Keep it up.
+        You have above 75%. Keep it up!
       </span>
     <?php endif; ?>
   </td>
@@ -202,10 +270,60 @@ if ($role === 'student') {
 </div>
 
 <div class="card">
-  <h4>Continuous Assessment Performance (out of 25)</h4>
+  <h4>Continuous Assessment(CA) Performance (out of 25)</h4>
   
   <!-- Line Chart -->
   <canvas id="marksChart"></canvas>
+
+  <div style="margin-top:20px;">
+  <h4>Absent in Continuous Assessments</h4>
+
+  <table class="table">
+    <tr>
+      <th>Subject</th>
+      <th>CA</th>
+    </tr>
+
+    <?php
+    $hasAbsent = false;
+
+    foreach($marksData as $md){
+
+        if($md['i1'] === null){
+            $hasAbsent = true;
+            echo "<tr>
+                    <td>".htmlspecialchars($md['subject'])."</td>
+                    <td>CA1</td>
+                  </tr>";
+        }
+
+        if($md['i2'] === null){
+            $hasAbsent = true;
+            echo "<tr>
+                    <td>".htmlspecialchars($md['subject'])."</td>
+                    <td>CA2</td>
+                  </tr>";
+        }
+
+        if($md['i3'] === null){
+            $hasAbsent = true;
+            echo "<tr>
+                    <td>".htmlspecialchars($md['subject'])."</td>
+                    <td>CA3</td>
+                  </tr>";
+        }
+    }
+
+    if(!$hasAbsent){
+        echo "<tr>
+                <td colspan='2' style='text-align:center;color:green;font-weight:bold;'>
+                  No absences recorded
+                </td>
+              </tr>";
+    }
+    ?>
+  </table>
+</div>
 
   <!-- Subject-wise Average Table -->
   <div style="margin-top:25px;">
@@ -244,14 +362,51 @@ if ($role === 'student') {
 
 <?php
 $unreadCount = get_unread_query_count($_SESSION['user_id']);
+$pendingReplyCount = get_pending_reply_count($_SESSION['user_id']);
 ?>
       <div class="card">
-        <h3>Faculty Dashboard</h3>
-        <a class="btn" href="attendance.php">Manage Attendance</a>
-        <a class="btn" href="marks.php" style="margin-left:8px">Manage Marks</a>
-        <a class="btn" href="faculty_queries.php" style="margin-left:8px">Student Queries</a>
-        <a class="btn" href="create_notice.php" style="margin-left:8px">Notice Board</a>
-        <a class="btn" href="upload_material.php" style="margin-left:8px">Study Repository</a>
+       <h3>Faculty Dashboard</h3>
+
+<div class="top-cards">
+
+  <div class="stats-card">
+    <h4>Unread Queries</h4>
+
+    <div class="value">
+      <?=$unreadCount?>
+    </div>
+
+    <div style="margin-top:5px;font-size:14px;">
+      New Queries
+    </div>
+
+    <a class="btn" href="faculty_queries.php" style="margin-top:8px;">
+      View
+    </a>
+  </div>
+
+  <div class="stats-card">
+    <h4>Pending Replies</h4>
+
+    <div class="value">
+      <?=$pendingReplyCount?>
+    </div>
+
+    <div style="margin-top:5px;font-size:14px;">
+      Awaiting Response
+    </div>
+
+    <a class="btn" href="faculty_queries.php" style="margin-top:8px;">
+      View
+    </a>
+  </div>
+
+</div>
+
+<a class="btn" href="attendance.php">Manage Attendance</a>
+<a class="btn" href="marks.php" style="margin-left:8px">Manage Marks</a>
+<a class="btn" href="create_notice.php" style="margin-left:8px">Notice Board</a>
+<a class="btn" href="upload_material.php" style="margin-left:8px">Study Repository</a>
       </div>
 
       <div class="card">
@@ -351,10 +506,8 @@ foreach($marks as $m):
     <?php else: /* admin */ ?>
       <div class="card">
       <h3>Admin Dashboard</h3>
-      <p>Welcome, Admin. You can manage users for EduSphere Phase 1.</p>
-      <a href="create_notice.php" class="btn">
-Manage Notices
-</a>
+      <p>Welcome, Admin.</p>
+      
       <div class="stats-box">
         <div class="stats-card">
           <h4>Total Users</h4>
@@ -378,6 +531,7 @@ Manage Notices
         <a href="admin_manage_users.php" class="btn">
           Manage Users
         </a>
+        <a href="create_notice.php" class="btn">Manage Notices</a>
       </div>
     </div>
     <?php endif; ?>
@@ -415,9 +569,38 @@ new Chart(aCtx, {
     }]
   },
   options: {
-    scales: { 
-      y: { beginAtZero:true, max:100 } 
+  scales: {
+    x: {
+      ticks: {
+        callback: function(value) {
+          const label = this.getLabelForValue(value);
+
+          if (label.includes('Machine Learning')) {
+            return ['Machine Learning', 'PEC-CS701E'];
+          }
+
+          if (label.includes('Cyber Security')) {
+            return ['Cyber Security', 'PEC-CS702E'];
+          }
+
+          if (label.includes('Operations Research')) {
+            return ['Operations Research', 'OECCS701A'];
+          }
+
+          if (label.includes('Project Management and Entrepreneurship')) {
+            return ['PMAE', 'HSMC701'];
+          }
+
+          return label;
+        }
+      }
     },
+
+    y: {
+      beginAtZero: true,
+      max: 100
+    }
+  },
 
     plugins: {
   legend: { display: false },   // ✅ remove blue box
@@ -468,24 +651,28 @@ new Chart(mCtx, {
     datasets: datasets
   },
   options: {
-  scales: {
-    y: { beginAtZero: true, max: 25 }
-  },
-  plugins: {
-    tooltip: { enabled: false },   // ❌ remove hover
-    datalabels: {
-      align: 'top',
-      formatter: function(value, context) {
-        const original = context.dataset.original[context.dataIndex];
-        return original === null ? 'ABSENT' : value;
+    scales: {
+      y: {
+        beginAtZero: true,
+        max: 25
+      }
+    },
+
+    plugins: {
+      tooltip: {
+        enabled: true
       },
-      font: { weight: 'bold' }
+
+      datalabels: {
+        display: false
+      }
+    },
+
+    interaction: {
+      mode: 'nearest',
+      intersect: true
     }
-  },
-  interaction: { mode: null },
-  hover: { mode: null },
-  events: []
-}
+  }
 });
 <?php endif; ?>
 
@@ -580,6 +767,15 @@ function closeModal() {
 function closeFacultyModal() {
   document.getElementById('facultyModal').style.display = 'none';
 }
+
+document.getElementById('attendanceCard')?.addEventListener('click', function() {
+
+    document.getElementById('attendanceSection').scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+    });
+
+});
 
 </script>
 

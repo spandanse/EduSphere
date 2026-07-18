@@ -614,3 +614,20 @@ function delete_material($id){
 
     return $stmt->execute();
 }
+
+function get_pending_reply_count($facultyId)
+{
+    global $conn;
+
+    $stmt = $conn->prepare("
+        SELECT COUNT(*) AS c
+        FROM queries
+        WHERE faculty_id = ?
+        AND status <> 'replied'
+    ");
+
+    $stmt->bind_param("i", $facultyId);
+    $stmt->execute();
+
+    return $stmt->get_result()->fetch_assoc()['c'];
+}

@@ -272,3 +272,21 @@ form textarea {
 
   box-shadow: 0 10px 30px rgba(0,0,0,0.3);
 }
+
+.stats-card {
+    transition: 0.2s;
+}
+
+#attendanceCard {
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+#attendanceCard:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+#attendanceCard:hover h4 {
+    color: #1a73e8;
+}
