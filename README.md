@@ -1,116 +1,258 @@
-# 🎓 EduSphere
+# 🎓 EduSphere – The Complete Academic Ecosystem
 
-EduSphere is a **Smart Academic Management System** built for colleges to manage students, faculty, attendance, marks, and academic analytics in a centralized platform.
+EduSphere is a **web-based Academic Management System** developed to streamline academic administration through a centralized platform for **Students, Faculty Members, and Administrators**.
 
-It focuses on **real-time performance tracking, smart attendance analysis, and exam readiness evaluation**.
+The system automates attendance management, Continuous Assessment (CA) tracking, study material sharing, notices, student–faculty communication, and academic analytics while providing secure role-based access.
 
 ---
 
 ## 🚀 Features
 
 ### 👨‍🎓 Student Module
-- Subject-wise attendance tracking with percentage analytics
-- Continuous Assessment (CA1, CA2, CA3) performance visualization
-- Smart attendance prediction (classes needed to maintain 75%)
-- Pre-exam checklist (risk detection based on attendance & marks)
-- Interactive dashboards with charts (Chart.js)
-- Query submission system to faculty
+
+- Secure role-based login
+- Subject-wise attendance tracking
+- Attendance percentage visualization
+- Continuous Assessment (CA1, CA2, CA3) tracking
+- Attendance Predictor (classes required to achieve minimum attendance)
+- Pre-Exam Eligibility Checker
+- Interactive dashboards using Chart.js
+- View notices and announcements
+- Download study materials
+- Submit academic queries to faculty
+- View faculty responses
+
+---
 
 ### 👨‍🏫 Faculty Module
-- Manage student attendance records
-- Manage internal marks (CA1, CA2, CA3)
-- View subject-wise student performance analytics
-- Access full student attendance history
-- Respond to student queries
-- Smart student performance overview dashboard
 
-### 🔐 Admin Module
-- Manage users (students & faculty)
-- Manage academic subjects
-- System-level overview dashboard
+- Secure authentication
+- Manage attendance records
+- Manage CA marks
+- Upload study materials
+- Publish notices
+- Respond to student queries
+- Monitor student academic performance
+- Interactive faculty dashboard
 
 ---
 
-## 🧠 Smart Features
+### 🔐 Administrator Module
+
+- Manage students and faculty
+- Manage academic subjects
+- Manage institutional notices
+- Monitor system activities
+- Centralized administration dashboard
+
+---
+
+# ✨ Smart Features
 
 - 📊 Real-time attendance analytics
-- 📉 Automatic low attendance detection (<75%)
-- 🎯 Pre-exam risk analysis system
-- 📈 CA performance visualization
-- ⚡ Predictive attendance insights
-- 📌 Role-based dashboards (Student / Faculty / Admin)
+- 📈 Continuous Assessment analytics
+- 📉 Automatic low attendance detection
+- 🎯 Pre-Exam Eligibility Checker
+- 📌 Attendance Predictor
+- 📚 Digital Study Repository
+- 📢 Digital Notice Board
+- 💬 Student–Faculty Query System
+- 🔒 Role-Based Access Control (RBAC)
+- 📈 Interactive dashboards using Chart.js
 
 ---
 
-## 🛠️ Tech Stack
+# 🛠️ Tech Stack
 
-### Frontend:
+## Frontend
+
 - HTML5
 - CSS3
 - JavaScript
+- Bootstrap
 - Chart.js
 
-### Backend:
+## Backend
+
 - PHP (Core PHP)
 - MySQL
+- PHPMailer
 
-### Server:
-- XAMPP / Apache
+## Server
+
+- Apache (XAMPP)
+
+## Development Tools
+
+- Visual Studio Code
+- Git & GitHub
 
 ---
 
-## 🗄️ Database Design
+# 🗄️ Database
 
-Core tables used:
+The project uses MySQL as the relational database.
+
+Main tables include:
+
 - users
 - subjects
 - attendance
 - marks
+- notices
+- notice_recipients
+- study_materials
 - queries
 
 ---
 
-## 📂 Project Structure
+# 📂 Project Structure
 
 ```
-
 EduSphere/
 │
-├── assets/              # CSS, JS, images
-├── includes/           # DB connection & helper functions
-├── dashboard.php       # Main dashboard
+├── assets/
+│   ├── css/
+│   ├── js/
+│   └── images/
+│
+├── includes/
+│
+├── uploads/
+│
+├── dashboard.php
 ├── login.php
 ├── logout.php
 ├── attendance.php
 ├── marks.php
+├── attendance_predictor.php
 ├── preexam_checklist.php
+├── notices.php
+├── study_materials.php
 ├── student_queries.php
 ├── faculty_queries.php
-├── get_student_full_attendance.php
-└── edusphere.sql
-
+├── admin/
+├── edusphere.sql
+└── README.md
 ```
 
 ---
 
-## 📊 Key Functionalities
+# 📊 Core Functionalities
 
-### 📌 Attendance Tracking
-- Subject-wise attendance calculation using SQL aggregation
-- Percentage computation and visualization
+## 📌 Attendance Management
 
-### 📌 Marks System
-- Internal assessment tracking (CA1, CA2, CA3)
-- Average performance calculation per subject
-
-### 📌 Pre-Exam Intelligence System
-- Flags students with:
-  - Low attendance (<75%)
-  - Low CA performance
-- Helps students identify academic risks early
-
-### 📌 Smart Dashboard
-- Graphical representation of academic performance
-- Role-based dashboards with dynamic data visualization
+- Record attendance
+- Subject-wise attendance calculation
+- Attendance percentage visualization
+- Attendance Predictor
 
 ---
+
+## 📌 Continuous Assessment
+
+- Manage CA1, CA2 and CA3 marks
+- Subject-wise performance tracking
+- Performance graphs
+- Average score calculation
+
+---
+
+## 📌 Pre-Exam Eligibility
+
+Automatically evaluates students based on:
+
+- Minimum attendance requirement
+- Continuous Assessment performance
+
+Provides early alerts to students before examinations.
+
+---
+
+## 📌 Study Repository
+
+Faculty can:
+
+- Upload notes
+- Upload assignments
+- Upload presentations
+- Share study resources
+
+Students can securely browse and download resources.
+
+---
+
+## 📌 Notice Board
+
+- Publish academic notices
+- Student-specific notifications
+- Read/Unread status tracking
+
+---
+
+## 📌 Student–Faculty Query System
+
+- Students submit academic queries
+- Faculty respond through the portal
+- Complete conversation history maintained
+
+---
+
+## 📌 Dashboards & Analytics
+
+Interactive dashboards for:
+
+- Students
+- Faculty
+- Administrators
+
+Features include:
+
+- Attendance charts
+- CA performance graphs
+- Academic statistics
+- Performance analytics
+
+---
+
+# 🔒 Security Features
+
+- Role-Based Authentication (RBAC)
+- Session Management
+- Server-side Input Validation
+- Secure Database Operations
+- Restricted Access to Modules
+- Controlled Access to Study Materials
+
+---
+
+# 📈 Future Enhancements
+
+- Multi-semester support
+- Cloud deployment (AWS/Azure/GCP)
+- Android & iOS applications
+- AI-based academic analytics
+- LMS integration
+- Online examination module
+- Timetable management
+- Push notifications & Email alerts
+
+---
+
+# 👨‍💻 Authors
+
+- **Md. Shafi Aaghaz**
+- **Spandan Sen**
+- **Siddhanth Porel**
+
+Department of Computer Science & Engineering
+
+St. Thomas' College of Engineering and Technology
+
+MAKAUT, West Bengal
+
+---
+
+## 📄 License
+
+This project was developed as a **B.Tech Final Year Project** for academic purposes.
